@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Array</title>
+</head>
+<body>
+    <h1>Generador de credencial INSTALLMENTS_ID para Credencial Payments</h1>
+    
+    <div>
+        <label for="paymentMethod">Tipo de Tarjeta:</label>
+        <select id="paymentMethod">
+            <option value="VI">VI</option>
+            <option value="MC">MC</option>
+            <option value="AE">AE</option>
+        </select>
+    </div>
+    
+    <div>
+        <label for="installments">Cantidad de Cuotas:</label>
+        <select id="installments">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </div>
+    
+    <div>
+        <label for="promotionId">Promotion ID:</label>
+        <input type="text" id="promotionId">
+    </div>
+    
+    <button id="agregarBtn" onclick="agregarOpcion()" disabled>Agregar</button>
+    
+    <h2>Opciones Agregadas:</h2>
+    <ul id="opcionesList"></ul>
+    
+    <button onclick="generarArray()">Generar Array</button>
+    
+    <h2>Resultado:</h2>
+    <pre id="resultadoContainer"></pre>
+    
+    <script>
+        const opciones = [];
+
+const paymentMethodInput = document.getElementById('paymentMethod');
+const installmentsInput = document.getElementById('installments');
+const promotionIdInput = document.getElementById('promotionId');
+const agregarBtn = document.getElementById('agregarBtn');
+
+paymentMethodInput.addEventListener('change', validarCampos);
+installmentsInput.addEventListener('change', validarCampos);
+promotionIdInput.addEventListener('input', validarCampos);
+
+function validarCampos() {
+    const paymentMethod = paymentMethodInput.value;
+    const installments = installmentsInput.value;
+    const promotionId = promotionIdInput.value.trim();
+
+    const camposCompletos = paymentMethod && installments && promotionId;
+    agregarBtn.disabled = !camposCompletos;
+}
+
+function agregarOpcion() {
+    const paymentMethod = paymentMethodInput.value;
+    const installments = parseInt(installmentsInput.value);
+    const promotionId = promotionIdInput.value;
+
+    opciones.push({ payment_method: paymentMethod, installments: installments, promotion_id: promotionId });
+
+    paymentMethodInput.value = '';
+    installmentsInput.value = '1';
+    promotionIdInput.value = '';
+
+    mostrarOpciones();
+    validarCampos();
+}
+
+function mostrarOpciones() {
+    const opcionesList = document.getElementById('opcionesList');
+    opcionesList.innerHTML = '';
+
+    opciones.forEach((opcion) => {
+        const li = document.createElement('li');
+        li.textContent = `Tipo de Tarjeta: ${opcion.payment_method}, Cuotas: ${opcion.installments}, Promotion ID: ${opcion.promotion_id}`;
+        opcionesList.appendChild(li);
+    });
+}
+    
+        function generarArray() {
+            const resultadoContainer = document.getElementById('resultadoContainer');
+            const jsonArray = JSON.stringify(opciones).replace(/"/g, '\\"');
+            resultadoContainer.textContent = jsonArray;
+        }
+    </script>
+    
+</body>
+</html>
